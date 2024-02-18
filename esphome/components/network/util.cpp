@@ -9,12 +9,20 @@
 #include "esphome/components/ethernet/ethernet_component.h"
 #endif
 
+#ifdef USE_W5500_ETHERNET
+#include "esphome/components/w5500_ethernet/w5500_ethernet.h"
+#endif
+
 namespace esphome {
 namespace network {
 
 bool is_connected() {
 #ifdef USE_ETHERNET
   if (ethernet::global_eth_component != nullptr && ethernet::global_eth_component->is_connected())
+    return true;
+#endif
+#ifdef USE_W5500_ETHERNET
+  if (w5500_ethernet::global_eth_component != nullptr && w5500_ethernet::global_eth_component->is_connected())
     return true;
 #endif
 
@@ -41,6 +49,10 @@ network::IPAddress get_ip_address() {
 #ifdef USE_ETHERNET
   if (ethernet::global_eth_component != nullptr)
     return ethernet::global_eth_component->get_ip_address();
+#endif
+#ifdef USE_W5500_ETHERNET
+  if (w5500_ethernet::global_eth_component != nullptr)
+    return w5500_ethernet::global_eth_component->get_ip_address();
 #endif
 #ifdef USE_WIFI
   if (wifi::global_wifi_component != nullptr)
